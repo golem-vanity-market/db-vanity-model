@@ -28,25 +28,8 @@ jobs:
           corepack --version
           yarn --version
 
-      - name: Install, lint and check shared
-        working-directory: shared
+      - name: Install, lint and check
         run: | 
           bun install
           bun run lint
           bun run format:check
-
-      - name: Install, lint and check backend
-        working-directory: backend
-        run: |
-          bun install
-          bun run lint
-          bun run format:check
-
-      - name: Install, lint and check frontend
-        working-directory: frontend
-        run: |
-          bun install
-          bun run lint
-          bun run format:check
-
-
