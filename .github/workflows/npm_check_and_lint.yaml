@@ -32,4 +32,6 @@ jobs:
         run: | 
           bun install
           bun run lint
+          bun run oxlint
           bun run format:check
+          

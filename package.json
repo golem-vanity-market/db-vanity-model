@@ -6,8 +6,9 @@
     "test-serialization": "ts-node src/serialization.ts",
     "prod": "node dist/app.js",
     "lint": "eslint .",
-    "format:check": "prettier --check .",
-    "format": "prettier --write ."
+    "oxlint": "oxlint src",
+    "format:check": "oxfmt --check .",
+    "format": "oxfmt"
   },
   "dependencies": {
     "golem-base-sdk": "^0.1.16"
