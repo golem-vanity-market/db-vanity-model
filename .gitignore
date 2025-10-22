@@ -1,0 +1,6 @@
+.idea
+
+# deps
+node_modules/
+
+.env
