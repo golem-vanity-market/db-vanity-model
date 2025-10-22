@@ -1,5 +1,5 @@
 {
-  "name": "db-provider-reputation-shared",
+  "name": "db-vanity-model",
   "type": "module",
   "scripts": {
     "build": "tsc",
