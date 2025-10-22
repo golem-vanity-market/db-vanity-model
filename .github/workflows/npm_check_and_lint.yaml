@@ -17,16 +17,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Check requirements
+      - name: Check if bun is installed
         run: |
           set -x
           bun --version
-          pnpm --version
-          npm --version
-          node --version
-          node-gyp --version
-          corepack --version
-          yarn --version
 
       - name: Install, lint and check
         run: | 
