@@ -39,7 +39,10 @@ export const ProblemSchema = z.discriminatedUnion("type", [
   }),
   z.object({
     type: z.literal("user-mask"),
-    specifier: z.string().length(42).startsWith("0x"),
+    specifier: z
+      .string()
+      .length(40)
+      .regex(/^[0-9a-fx]+$/i),
   }),
 ]);
 
