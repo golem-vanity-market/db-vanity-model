@@ -54,7 +54,7 @@ export const VanityRequestSchema = z.object({
   problems: z.array(ProblemSchema).refine((value) => value.length > 0, {
     message: "You have to select at least one item.",
   }),
-  duration: z.enum(["5m", "15m", "30m", "1h", "4h", "12h", "24h"]),
+  duration: z.string(), //human-readable duration
   cancelledAt: z.iso.datetime().nullable(),
 });
 
