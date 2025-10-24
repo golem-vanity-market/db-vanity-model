@@ -60,6 +60,7 @@ export const VanityRequestSchema = z.object({
 
 export const VanityOrderSchema = z.object({
   requestId: z.string(),
+  requestor: z.string().startsWith("0x").length(42),
   status: z.enum(["queue", "processing", "completed", "cancelled"]),
   created: z.iso.datetime(),
   duration: z.number(),
