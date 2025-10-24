@@ -1,4 +1,3 @@
-
 export function vanityDurationToSeconds(str: string) {
   const regex = /(\d+\.?\d*)\s*(d|h|m|s)/gi;
   let totalSeconds = 0;
