@@ -55,16 +55,18 @@ export const VanityRequestSchema = z.object({
     message: "You have to select at least one item.",
   }),
   duration: z.enum(["5m", "15m", "30m", "1h", "4h", "12h", "24h"]),
+  cancelledAt: z.iso.datetime().nullable(),
 });
 
 export const VanityOrderSchema = z.object({
   requestId: z.string(),
-  status: z.enum(["queue", "processing", "completed"]),
+  status: z.enum(["queue", "processing", "completed", "cancelled"]),
   created: z.iso.datetime(),
   duration: z.number(),
   valid: z.iso.datetime().nullable(),
   started: z.iso.datetime().nullable(),
   completed: z.iso.datetime().nullable(),
+  cancelled: z.iso.datetime().nullable(),
   pubKey: z.union([
     z.string().startsWith("0x").length(132),
     z.string().startsWith("xpub"),
