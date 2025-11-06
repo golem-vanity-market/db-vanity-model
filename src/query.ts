@@ -1,5 +1,5 @@
 import { deserializeProvider, type ProviderDataEntry } from "./provider.ts";
-import { type GolemBaseROClient, type Hex } from "golem-base-sdk";
+import { PublicArkivClient, Entity } from "@arkiv-network/sdk";
 
 export function numberToSortableString(
   num: number,
@@ -132,39 +132,23 @@ export function mapValueForNumberAnnotation(
 }
 
 export async function fetchAllEntitiesRaw(
-  client: GolemBaseROClient,
+  client: PublicArkivClient,
   numberOfGroups: number,
   owner: string,
-): Promise<
-  Record<
-    string,
-    {
-      entityKey: Hex;
-      storageValue: Uint8Array;
-    }
-  >
-> {
+): Promise<Record<string, Entity>> {
   // Placeholder for actual implementation
   const proms = [];
   for (let groupNo = 1; groupNo <= numberOfGroups; groupNo++) {
-    proms.push(
-      client.queryEntities(`group = ${groupNo} && $owner = "${owner}"`),
-    );
+    proms.push(client.query(`group = ${groupNo} && $owner = "${owner}"`));
   }
-  const byProviderId: Record<
-    string,
-    {
-      entityKey: Hex;
-      storageValue: Uint8Array;
-    }
-  > = {};
+  const byProviderId: Record<string, Entity> = {};
 
   for (const prom of proms) {
     const entities = await prom;
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.storageValue);
+        data = deserializeProvider(entity.payload);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
@@ -176,7 +160,7 @@ export async function fetchAllEntitiesRaw(
 }
 
 export async function fetchAllEntities(
-  client: GolemBaseROClient,
+  client: PublicArkivClient,
   numberOfGroups: number,
   owner: string,
   internalQuery: string | null,
@@ -185,13 +169,9 @@ export async function fetchAllEntities(
   const proms = [];
   for (let groupNo = 1; groupNo <= numberOfGroups; groupNo++) {
     if (internalQuery) {
-      proms.push(
-        client.queryEntities(`(${internalQuery}) && group = ${groupNo}`),
-      );
+      proms.push(client.query(`(${internalQuery}) && group = ${groupNo}`));
     } else {
-      proms.push(
-        client.queryEntities(`group = ${groupNo} && $owner = "${owner}"`),
-      );
+      proms.push(client.query(`group = ${groupNo} && $owner = "${owner}"`));
     }
   }
   const byProviderId: Record<string, ProviderDataEntry> = {};
@@ -201,12 +181,12 @@ export async function fetchAllEntities(
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.storageValue);
+        data = deserializeProvider(entity.payload);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
       }
-      data.key = entity.entityKey;
+      data.key = entity.key;
       byProviderId[data.providerId] = data;
     }
   }
