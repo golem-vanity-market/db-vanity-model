@@ -148,7 +148,7 @@ export async function fetchAllEntitiesRaw(
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.payload);
+        data = deserializeProvider(entity.payload!);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
@@ -181,7 +181,7 @@ export async function fetchAllEntities(
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.payload);
+        data = deserializeProvider(entity.payload!);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
