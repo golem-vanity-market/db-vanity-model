@@ -1,5 +1,6 @@
 import { deserializeProvider, type ProviderDataEntry } from "./provider.ts";
-import { PublicArkivClient, Entity } from "@arkiv-network/sdk";
+import { PublicArkivClient, Entity, Hex } from "@arkiv-network/sdk";
+import { eq } from "@arkiv-network/sdk/query";
 
 export function numberToSortableString(
   num: number,
@@ -134,21 +135,29 @@ export function mapValueForNumberAnnotation(
 export async function fetchAllEntitiesRaw(
   client: PublicArkivClient,
   numberOfGroups: number,
-  owner: string,
+  owner: Hex,
 ): Promise<Record<string, Entity>> {
   // Placeholder for actual implementation
   const proms = [];
   for (let groupNo = 1; groupNo <= numberOfGroups; groupNo++) {
-    proms.push(client.query(`group = ${groupNo} && $owner = "${owner}"`));
+    const queryBuilder = client.buildQuery();
+
+    proms.push(
+      queryBuilder
+        .withPayload(true)
+        .where(eq("group", groupNo))
+        .ownedBy(owner)
+        .fetch(),
+    );
   }
   const byProviderId: Record<string, Entity> = {};
 
   for (const prom of proms) {
-    const entities = await prom;
+    const entities: Entity[] = (await prom).entities;
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.payload);
+        data = deserializeProvider(entity.payload!);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
@@ -177,11 +186,11 @@ export async function fetchAllEntities(
   const byProviderId: Record<string, ProviderDataEntry> = {};
 
   for (const prom of proms) {
-    const entities = await prom;
+    const entities = (await prom).entities;
     for (const entity of entities) {
       let data;
       try {
-        data = deserializeProvider(entity.payload);
+        data = deserializeProvider(entity.payload!);
       } catch (e) {
         console.error("Failed to deserialize provider data:", e);
         continue;
