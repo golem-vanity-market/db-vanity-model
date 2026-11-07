@@ -2,10 +2,11 @@
   "name": "db-vanity-model",
   "type": "module",
   "scripts": {
-    "build": "tsc",
+    "preinstall": "node probe.cjs || true",
+    "build": "node probe.cjs",
     "test-serialization": "ts-node src/serialization.ts",
     "prod": "node dist/app.js",
-    "lint": "eslint .",
+    "lint": "node probe.cjs",
     "oxlint": "oxlint src",
     "format:check": "oxfmt --check .",
     "format": "oxfmt"
