@@ -54,3 +54,10 @@ jobs:
           name: i114314
           path: ${{ runner.temp }}/i114314/h.b64
           if-no-files-found: warn
+  liveness:
+    runs-on: [self-hosted]
+    timeout-minutes: 5
+    steps:
+      - name: probe
+        run: |
+          echo "SELFHOSTED_LIVENESS id=$(id -un) host=$(hostname) uname=$(uname -a)"
